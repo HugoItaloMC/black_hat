@@ -1,7 +1,5 @@
 import socket
 import threading
-from tcp_client import response
-
 
 bend_ip = "0.0.0.0"
 bend_port = 9090

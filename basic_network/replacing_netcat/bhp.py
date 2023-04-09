@@ -174,7 +174,8 @@ def server_loop():
 
     except Exception as err:
         print(f"Error : {err}")
-    else:
+
+    finally:
         server.close()
 
 
