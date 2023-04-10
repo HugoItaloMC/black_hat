@@ -1,0 +1,2 @@
+ - Conceitos basicos da arquitetura Server/Client, criando TCP client/server via socket
+  - Criando ferramenta `NETCAT` em Python, no paradigma funcional

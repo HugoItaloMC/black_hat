@@ -1,10 +1,9 @@
 import sys
 import socket
-import getopt
 import threading
 import subprocess
-
-
+import argparse
+import logging
 # some Globals Variables
 
 listen: bool = False
@@ -33,68 +32,57 @@ def usage():
 
 
 def main():
+
     global listen
-    global port
-    global execute
     global command
-    global upload_destination
+    global upload
+    global execute
     global target
+    global upload_destination
+    global port
 
-    if not len(sys.argv[1:]):
-        usage()
     # Ler as Opcoes da linha de comando
+    parser = argparse.ArgumentParser(sys.argv[1:], description="TODO: Flags to options")
+    parser.add_argument('-l', '--listen', action='store_true', help='TODO: listar/instanciar servidor TCP')
+    parser.add_argument('-e', '--execute', metavar='FILE', help='TODO: Executar comando externo')
+    parser.add_argument('-c', '--command', action='store_true', help='TODO: Begin shell')
+    parser.add_argument('-u', '--upload', metavar='DESTINATION', help='TODO: Upload logging app to file back')
+    parser.add_argument('-t', '--target', metavar='HOST', help='TODO: Host for server and client')
+    parser.add_argument('-p', '--port', type=int, metavar='PORT', help='TODO: Port to server or client')
 
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:cu:",
-                                   ["help", "listen", "execute", "target", "port", "command", "upload"]
-                                   )
+    args = parser.parse_args()
 
-    except getopt.GetoptError as err:
-        print(str(err))
-        usage()
-    else:
-        for o, a in opts:
-            if o in ("-h", "--help"):
-                usage()
-            elif o in ("-l", "--listen"):
-                listen = True
-            elif o in ("-e", "--execute"):
-                execute = a
-            elif o in ("-c", "--comandshell"):
-                command = True
-            elif o.encode() in ("-u", "--upload"):
-                upload_destination = a
-            elif o in ("-t", "--target"):
-                target = a
-            elif o in ("-p", "--port"):
-                port = int(a)
-            else:
-                assert False, "Invalid Option"
+
+    if not any(vars(args).values()):
+        parser.print_usage()
+        sys.exit()
+
+    listen = args.listen
+    execute = args.execute
+    command = args.command
+    upload = bool(args.upload)
+    upload_destination = upload_destination if args.upload else ''
+    target = args.target
+    port = args.port
+
+    # TODO: args para instanciar variaveis globais
 
     if not listen and len(target) and port > 0:
-
-        # Lido do Bufer a partir da linha de comando acima
-        # Para bloquear, entao enviar CTRL + D, se nao enviar entrada >>
-        # Para stdin:
         buffer = sys.stdin.read()
         client_sender(buffer)
-
-        # Vamos Ouvir e Potencialmente:
-        # Alguns uploads, executar comandos, soltar um shell de volta
-        # Dependendo de nossas opcoes de linha de comando acima
 
     if listen:
         server_loop()
 
-
 # Send Client
 
-def client_sender(buffer):
 
+def client_sender(buffer):
     """
     :param buffer: Comandos de entrada por parametros
     :return: non
     """
+
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.settimeout(10)
 
@@ -104,7 +92,7 @@ def client_sender(buffer):
             client_socket.connect((target, port))
 
             if len(buffer):
-                client_socket.sendall(buffer.encode())
+                client_socket.send(buffer.encode())
 
             while True:
                 # Esperar retorno de dados
@@ -124,7 +112,7 @@ def client_sender(buffer):
                 buffer += "\n"
 
                 # Enviar
-                client_socket.sendall(buffer)
+                client_socket.send(buffer)
 
     except socket.timeout:
         print("Error: Connection Time out")
@@ -140,20 +128,19 @@ def client_sender(buffer):
         client_socket.close()
 
 
-
 # Primary Server Loop
 
 
 def server_loop():
     global target, port
-
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         # Se nenhum trajeto for definido, sera listada diversas interdaces
-        if not len(target):
+        if not target:
             target = socket.gethostbyname('localhost')
 
         # Start TCP server with socket
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
         # Configurar para reutilizar a host e a porta
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -263,4 +250,10 @@ def client_handler(client_socket):
                         client_socket.send(command)
 
 
-main()
+if __name__ =='__main__':
+
+    logging.basicConfig(filename='logging.txt',
+                        filemode='a',
+                        level=logging.INFO,
+                        format="%(asctime)s %(levelname) %(messege)s")
+    main()
