@@ -42,12 +42,12 @@ def main():
     global port
 
     # Ler as Opcoes da linha de comando
-    parser = argparse.ArgumentParser(sys.argv[1:], description="TODO: Flags to options")
+    parser = argparse.ArgumentParser(prog="PY NETCAT", usage="%(prog)s")
     parser.add_argument('-l', '--listen', action='store_true', help='TODO: listar/instanciar servidor TCP')
     parser.add_argument('-e', '--execute', metavar='FILE', help='TODO: Executar comando externo')
     parser.add_argument('-c', '--command', action='store_true', help='TODO: Begin shell')
-    parser.add_argument('-u', '--upload', metavar='DESTINATION', help='TODO: Upload logging app to file back')
-    parser.add_argument('-t', '--target', metavar='HOST', help='TODO: Host for server and client')
+    parser.add_argument('-u', '--upload', metavar='DESTINATION', help='TODO: Upload logging from app to file back')
+    parser.add_argument('-t', '--target', metavar='HOST', help='TODO: Host for server or client')
     parser.add_argument('-p', '--port', type=int, metavar='PORT', help='TODO: Port to server or client')
 
     args = parser.parse_args()
@@ -84,7 +84,6 @@ def client_sender(buffer):
     """
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.settimeout(10)
 
     try:
         # Conectando para host de destino
@@ -92,7 +91,7 @@ def client_sender(buffer):
             client_socket.connect((target, port))
 
             if len(buffer):
-                client_socket.send(buffer.encode())
+                client_socket.sendall(buffer.encode())
 
             while True:
                 # Esperar retorno de dados
@@ -104,16 +103,7 @@ def client_sender(buffer):
                     if not data:
                         break
                     response += data
-
                 print(response,)
-                # Esperar por alguma entrada
-
-                buffer = input("Enter command: ")
-                buffer += "\n"
-
-                # Enviar
-                client_socket.send(buffer)
-
     except socket.timeout:
         print("Error: Connection Time out")
     except ConnectionRefusedError:
@@ -125,7 +115,16 @@ def client_sender(buffer):
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
-        client_socket.close()
+        # Esperar por alguma entrada
+
+        buffer = input("Enter command: ")
+        buffer += "\n"
+
+        # Enviar
+        buffer.encode()
+        client_socket.sendall(buffer)
+        client_socket.settimeout(10)
+
 
 
 # Primary Server Loop
@@ -171,9 +170,9 @@ def run_command(command):
 
     # Executar o comando e retornar uma saida
     try:
-        output = subprocess.check_output(command,
-                                         stderr=subprocess.STDOUT,
-                                         shell=True)
+        output = subprocess.check_call(command,
+                                       stderr=subprocess.STDOUT,
+                                       shell=True)
 
     except:
         output = "Failed the execution command line\r\n"
@@ -227,17 +226,17 @@ def client_handler(client_socket):
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         check=True).stdout
-                    client_socket.send(output.decode())
+                    client_socket.sendall(output.decode())
 
                 except subprocess.CalledProcessError as err:
                     print(f"Erro ao executar o comando {err.output}".encode())
 
             # Agora vamos para outro ciclo se um comando shell for chamado
-            elif command:
+            if command:
 
                 while True:
                     # Mostrar uma linha simples
-                    client_socket.send(b"BHP.># ")
+                    client_socket.sendall(b"BHP.># ")
 
                     # Agora recebemos ate que haja um avanco na linha (tecla enter)
                     cmd_buffer = ""
@@ -247,13 +246,13 @@ def client_handler(client_socket):
                         # Alguma saida do comando
                         command = run_command(cmd_buffer)
                         # Alguma resposta de saida
-                        client_socket.send(command)
+                        client_socket.sendall(command)
 
 
 if __name__ =='__main__':
 
     logging.basicConfig(filename='logging.txt',
-                        filemode='a',
+                        filemode='wb',
                         level=logging.INFO,
                         format="%(asctime)s %(levelname) %(messege)s")
     main()
