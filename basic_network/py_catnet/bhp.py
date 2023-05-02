@@ -4,6 +4,7 @@ import threading
 import subprocess
 import argparse
 import logging
+
 # some Globals Variables
 
 listen: bool = False
@@ -16,7 +17,6 @@ port: int
 
 
 def usage():
-
     print("BHP NET TOOL"
           "\nUsage: bhp.py -t target_host -p port"
           "\n-l --listen \n:: Executar em [host]:[port] para conexoes de entrada"
@@ -32,7 +32,6 @@ def usage():
 
 
 def main():
-
     global listen
     global command
     global upload
@@ -51,7 +50,6 @@ def main():
     parser.add_argument('-p', '--port', type=int, metavar='PORT', help='TODO: Port to server or client')
 
     args = parser.parse_args()
-
 
     if not any(vars(args).values()):
         parser.print_usage()
@@ -73,6 +71,7 @@ def main():
 
     if listen:
         server_loop()
+
 
 # Send Client
 
@@ -103,7 +102,7 @@ def client_sender(buffer):
                     if not data:
                         break
                     response += data
-                print(response,)
+                print(response, )
     except socket.timeout:
         print("Error: Connection Time out")
     except ConnectionRefusedError:
@@ -126,7 +125,6 @@ def client_sender(buffer):
         client_socket.settimeout(10)
 
 
-
 # Primary Server Loop
 
 
@@ -139,7 +137,6 @@ def server_loop():
             target = socket.gethostbyname('localhost')
 
         # Start TCP server with socket
-
 
         # Configurar para reutilizar a host e a porta
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -184,7 +181,6 @@ def run_command(command):
 # Upload de arquivos, execucao de comandos e o shell
 
 def client_handler(client_socket):
-
     global upload_destination
     global execute
     global command
@@ -193,7 +189,7 @@ def client_handler(client_socket):
     if len(upload_destination):
         # Lidos em todos os bytes e mandamos para nosso arquivo
         file_buffer = ""
-        max_file_size = 1024 * 1024 # 1MB
+        max_file_size = 1024 * 1024  # 1MB
         # Manter a leitura ate que nao esteja mais disponivel
 
         while True:
@@ -242,15 +238,13 @@ def client_handler(client_socket):
                     cmd_buffer = ""
 
                     while "\n" not in cmd_buffer:
-
                         # Alguma saida do comando
                         command = run_command(cmd_buffer)
                         # Alguma resposta de saida
                         client_socket.sendall(command)
 
 
-if __name__ =='__main__':
-
+if __name__ == '__main__':
     logging.basicConfig(filename='logging.txt',
                         filemode='wb',
                         level=logging.INFO,
