@@ -19,18 +19,18 @@ class PyCat:
         self.port = 0
 
         # Configuracao de logger
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('__name__')
         self.logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(levelame)s - %(message)s')
-        file_handler = logging.FileHandler('pycat.log')
+        file_handler = logging.FileHandler('../basic_network/py_catnet/pycat.log')
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
 
     def run(self):
-        if not self.listen:
+        if self.listen:
             self.server_loop()
-        else:
+        elif not self.listen and len(self.targer) and self.port > 0:
             self.client_sender()
 
     def client_sender(self):
@@ -65,13 +65,13 @@ class PyCat:
                         response = self.run_command(cmd_buffer)
                         client_socket.send(response.encode())
         except Exception as err:
-            print("Error # %s" % type(err))
+            print("Error # %s" % err)
             client_socket.close()
 
     def server_loop(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if not self.targer:
-            targer = socket.gethostbyname('localhost')
+            self.targer = socket.gethostbyname('localhost')
         else:
             try:
                 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -84,7 +84,6 @@ class PyCat:
                     self.logger.debug(f"[*] - Accepted connection from {addr[0]}:{int(addr[1])}")
                     client_thread = threading.Thread(target=self.client_handler, args=(client_socket,))
                     client_thread.start()
-                    client_thread.join()
 
             except Exception as err:
                 self.logger.error("Error <#:> {}".format(err))
@@ -135,12 +134,12 @@ class PyCat:
 
 def arg_parser():
     parser = argparse.ArgumentParser(description='NetCat with Python')
-    parser.add_argument('-l', dest='listen', action='store_true', help='TODO: ')
-    parser.add_argument('-e', dest='execute', metavar='FILE', help='TODO: ')
-    parser.add_argument('-c', dest='command', action='store_true', help='TODO: ')
-    parser.add_argument('-u', dest='upload', metavar='DESTINATION', help='TODO: ')
-    parser.add_argument('-t', dest='targer', metavar='HOST', help="TODO: ")
-    parser.add_argument('-p', dest='port', metavar='PORT', help='TODO: ')
+    parser.add_argument('-l', '--listen', action='store_true', help='TODO: ')
+    parser.add_argument('-e', '--execute', metavar='FILE', help='TODO: ')
+    parser.add_argument('-c', '--command', action='store_true', help='TODO: ')
+    parser.add_argument('-u', '--upload', metavar='DESTINATION', help='TODO: ')
+    parser.add_argument('-t', '--targer', metavar='HOST', help="TODO: ")
+    parser.add_argument('-p', '--port', metavar='PORT', help='TODO: ')
     args = parser.parse_args()
     return args
 
@@ -149,10 +148,10 @@ if __name__ == '__main__':
     pycat = PyCat()
     args = arg_parser()
 
-    pycat._targer = args.targer
-    pycat._port = int(args.port)
-    pycat._upload_destination = args.upload
-    pycat._command = args.command
-    pycat._execute = args.execute
-    pycat._listen = args.listen
+    pycat.targer = args.targer
+    pycat.port = args.port
+    pycat.upload_destination = args.upload
+    pycat.command = args.command
+    pycat.execute = args.execute
+    pycat.listen = args.listen
     pycat.run()
