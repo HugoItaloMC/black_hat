@@ -1,4 +1,6 @@
 Folder from tests to scripts:
 
 Py CatNet:
- - Firsts tests: "Behaviours send methods (running, arguments flags)"
+ - Behaviours send methods (running, arguments flags)
+ - Create Objects need structural methods and objects to feature
+ - Tests in args to call in methods from class

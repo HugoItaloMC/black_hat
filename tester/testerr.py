@@ -1,4 +1,9 @@
 # Tester BHP Tool to POO with Python
+# Font: Book (Black Hat Python edition 2014)
+"""
+ Fonte base para evolucão do codigo veio do livro `Black Hat Python`
+mais precisamente no primeiro capitulo
+"""
 import sys
 import socket
 import threading
@@ -10,13 +15,13 @@ import logging
 class PyCat:
 
     def __init__(self):
-        self.listen = False
-        self.command = False
-        self.upload = False
-        self.execute = ""
-        self.targer = ""
-        self.upload_destination = str()
-        self.port = 0
+        self.listen = False  # bind, listen, acept (flag begin to server)
+        self.command = False  # Handler
+        self.execute = ""  # Handler
+        self.upload_destination = str()  # Handler
+        self.targer = ""  # Netting
+        self.port = 0  # Netting
+        self.upload = False  # non
 
         # Configuracao de logger
         self.logger = logging.getLogger('__name__')
@@ -133,7 +138,8 @@ class PyCat:
 
 
 def arg_parser():
-    parser = argparse.ArgumentParser(description='NetCat with Python')
+    parser = argparse.ArgumentParser(sys.argv[1:],
+                                     description='NetCat with Python')
     parser.add_argument('-l', '--listen', action='store_true', help='TODO: ')
     parser.add_argument('-e', '--execute', metavar='FILE', help='TODO: ')
     parser.add_argument('-c', '--command', action='store_true', help='TODO: ')
