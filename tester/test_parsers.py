@@ -1,6 +1,5 @@
-# behaviours argparser (flags to script commands)
+# behaviours argparser (args to script commands)
 import argparse
-
 
 
 class Parser:
@@ -13,6 +12,7 @@ class Parser:
         parser.add_argument('-t', '--targer', metavar='HOST', help="TODO: ")
         parser.add_argument('-p', '--port', metavar='PORT', help='TODO: ')
         args = parser.parse_args()
+
         if not any(vars(args).values()):
             print(parser.print_usage())
         else:

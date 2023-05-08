@@ -7,7 +7,7 @@ class Handler:
 class ClientHandler(Handler):
     # The handler object is sender from bind
     def __init__(self):
-        self.upload_path: str # Upload output to path for file
+        self.upload_path: str  # Upload output to path for file
         self.execute: str  # The path from command by file
         self.command: str  # The external command (shell)
 

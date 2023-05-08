@@ -7,9 +7,9 @@ from test_parsers import Parser
 
 parser = Parser()
 
+
 class Main:
     # The object to union
-
     def __init__(self):
         self.__server = NettingServer()
         self.__client = NettingClient()
@@ -20,7 +20,7 @@ class Main:
         server = self.__server
 
         server.target = self.parser.targer
-        server.port = self.parser.port
+        server.port = int(self.parser.port)
         server.sockparser()
 
     def _client(self, buffer):
