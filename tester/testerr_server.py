@@ -1,6 +1,4 @@
 import socket
-from test_parsers import Parser
-from testerr_handler import ClientHandler
 
 
 class Netting:
@@ -25,5 +23,6 @@ class NettingServer(Netting):
         server.setsockopt(self.socket_by.SOL_SOCKET, self.socket_by.SO_REUSEADDR, 1)
         server.bind((self.target, self.port))
         server.listen(5)
-        print('[*] Listening on %s:%d' % (self.target, self.port))
-        print("Is method sockparser implemented `NettingServer`")
+        print("[*] - Listening only %s:%d" % (self.target, self.port))
+        return server.accept()
+

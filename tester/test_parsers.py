@@ -3,7 +3,8 @@ import argparse
 
 
 class Parser:
-    def arg_parser(self):
+    @staticmethod
+    def arg_parser():
         parser = argparse.ArgumentParser(prog='Replacing NetCat with Python', description='%(prog)s')
         parser.add_argument('-l', '--listen', action='store_true', help='TODO: ')
         parser.add_argument('-e', '--execute', metavar='FILE', help='TODO: ')
@@ -17,7 +18,6 @@ class Parser:
             print(parser.print_usage())
         else:
             return args
-
 
 
 if __name__ == '__main__':

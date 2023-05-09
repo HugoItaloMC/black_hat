@@ -1,11 +1,14 @@
 # know bahaviuor method `run`
 import sys
+import threading
+from threading import Lock
 
 from testerr_client import NettingClient
 from testerr_server import NettingServer
 from test_parsers import Parser
-
+from testerr_handler import OptHandler
 parser = Parser()
+_handler = OptHandler()
 
 
 class Main:
@@ -14,30 +17,42 @@ class Main:
         self.__server = NettingServer()
         self.__client = NettingClient()
         self.parser = parser.arg_parser()
-
+        self.lock = Lock()
 
     def _server(self):
-        server = self.__server
+        with self.lock:
+            server = self.__server
 
-        server.target = self.parser.targer
-        server.port = int(self.parser.port)
-        server.sockparser()
+            server.target = self.parser.targer
+            server.port = int(self.parser.port)
+            return server.sockparser()
 
     def _client(self, buffer):
-        client = self.__client
-        client.target = self.parser.targer
-        client.port = self.parser.port
-        client.sockparser(buffer)
+        with self.lock:
+            client = self.__client
+            client.target = self.parser.targer
+            client.port = int(self.parser.port)
+            client.sockparser(buffer)
 
     def run(self):
+        thread = []
         if self.parser.listen:
-            return self._server()
+            server = self._server()
+            while True:
+                client_socker, addr = server[::1]
+                print("[*] - Accepted connection from %s:%d" % (addr[0], addr[1]))
+                threads = threading.Thread(target=_handler.client_handler, args=(client_socker,))
+                threads.start()
+                thread.append(threads)
 
         if not self.parser.listen and len(self.parser.targer) and int(self.parser.port) > 0:
             buffer = sys.stdin.read()
-            return self._client(buffer)
+            threads = threading.Thread(target=self._client, args=(buffer,))
+            threads.start()
+            thread.append(threads)
 
-
+        for line in thread:
+            line.join()
 
 
 if __name__ == '__main__':

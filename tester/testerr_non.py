@@ -2,7 +2,10 @@
 # Font: Book (Black Hat Python edition 2014)
 """
  Fonte base para evolucão do codigo veio do livro `Black Hat Python`
-mais precisamente no primeiro capitulo
+mais precisamente no primeiro capitulo.
+ Este código está sem algum teste vinculado, dedico-me ao código em meus
+tempos livres, e utilizo deste objeto como base para desenvolver a ferra-
+menta mais performatizada e com padrão de software.
 """
 import sys
 import socket
