@@ -4,3 +4,4 @@ Py CatNet:
  - Behaviours send methods (running, arguments flags)
  - Create Objects need structural methods and objects to feature
  - Tests in args to call in methods from class
+ - TTests created by bind socket to hosts with behaviours util threads
