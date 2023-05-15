@@ -30,7 +30,7 @@ class PyCat:
         self.logger = logging.getLogger('__name__')
         self.logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s - %(levelame)s - %(message)s')
-        file_handler = logging.FileHandler('../basic_network/py_catnet/pycat.log')
+        file_handler = logging.FileHandler('../pycat.log')
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)

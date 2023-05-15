@@ -1,5 +1,6 @@
 # behaviours argparser (args to script commands)
 import argparse
+from collections.abc import Sequence
 
 
 class Parser:
