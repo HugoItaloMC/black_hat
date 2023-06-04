@@ -150,7 +150,6 @@ def arg_parser():
     parser.add_argument('-t', '--targer', metavar='HOST', help="TODO: ")
     parser.add_argument('-p', '--port', metavar='PORT', help='TODO: ')
     args = parser.parse_args()
-    return args
 
 
 if __name__ == '__main__':

@@ -63,11 +63,11 @@ class OptHandler(Handler):
                 while "\n" not in cmd_buffer:
                     cmd_buffer += client_socket.recv(4096)
 
-                response = self.run_command(cmd_buffer.encode())
+                response = self.run_command(command=cmd_buffer.encode('utf-8'))
                 client_socket.send(response.encode())
 
     @staticmethod
-    def run_command(self, command):
+    def run_command(self, *, command):
         # subprocess to command from handler by client
         self.lock = Lock()
         with self.lock:
@@ -77,3 +77,8 @@ class OptHandler(Handler):
             except:
                 outpput = 'Failure to execute command\r\n'
             return outpput
+
+
+
+
+

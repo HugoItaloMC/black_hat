@@ -25,7 +25,7 @@ class NettingClient(Netting):
         return super().__getattr__(item)
 
     def sockparser(self, buffer):
-        # Begin sender by client to host bind socket
+        # Begin sender by client to host bind in socket
         client = None
         for res in socket.getaddrinfo(self.target, self.port,
                                       socket.AF_UNSPEC,

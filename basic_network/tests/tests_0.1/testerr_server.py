@@ -28,11 +28,12 @@ class NettingServer(Netting):
                                           0,
                                           socket.AI_PASSIVE):
                 af, socktype, proto, canonname, sa = res
+            else:
                 try:
                     server = socket.socket(af, socktype, proto)
                 except OSError as err:
                     server = None
-                    continue
+                    pass
                 try:
                     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                     server.bind(sa)
