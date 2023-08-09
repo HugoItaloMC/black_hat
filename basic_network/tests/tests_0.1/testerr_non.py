@@ -149,7 +149,7 @@ def arg_parser():
     parser.add_argument('-u', '--upload', metavar='DESTINATION', help='TODO: ')
     parser.add_argument('-t', '--targer', metavar='HOST', help="TODO: ")
     parser.add_argument('-p', '--port', metavar='PORT', help='TODO: ')
-    args = parser.parse_args()
+    return parser.parse_args()
 
 
 if __name__ == '__main__':

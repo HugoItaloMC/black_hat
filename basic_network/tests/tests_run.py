@@ -1,40 +1,45 @@
+import threading
+import sys
 from tests_parserargs import JoinParser
+from tests_bind import Netting
 
 args = JoinParser()
+bind = Netting
 
 
 def test_port_target():
-    print('Running test method port target')
+    print('..Running test method port target')
 
 
 def test_command():
-    print('Running test method command')
+    print('..Running test method command')
 
 
 def test_execute():
-    print('Running test method execute')
+    print('..Running test method execute')
 
 
 def test_upload():
-    print('Running test method upload')
+    print('..Running test method upload')
 
 
 def socket_bind():
-    print('Running test method socket bind')
+    parser = args()
+    bind.socket_loop(parser['target'], parser['port'])
 
 
 def socket_connect():
-    print('Running test method socket connect')
+    print('..Running test method socket connect')
 
 
 def test_listen():
-    print('Running test method listen')
+    print('..Running test method listen')
     socket_bind()
 
 
 def test_client_handler():
     parser = args()
-    print('Running client handler')
+    print('..Running client handler')
     socket_connect()
 
     if parser['upload_destination']:
@@ -49,12 +54,17 @@ def test_client_handler():
         test_command()
 
 
+def test_client_sender(buffer):
+    print('..Running test method client sender')
+
+
 if __name__ == '__main__':
     def manager():
         parser = args()
         if parser['listen']:
-            test_listen()
+            bind.socket_loop(parser['target'], parser['port'])
         elif not parser['listen'] and len(parser['target']) and parser['port'] > 0:
-            test_client_handler()
+            buffer = sys.stdin.read()
+            test_client_sender(buffer)
 
     manager()
