@@ -64,18 +64,15 @@ def main():
     port = args.port
 
     # TODO: args para instanciar variaveis globais
-
-    if not listen and len(target) and port > 0:
-        buffer = sys.stdin.read()
-        client_sender(buffer)
-
     if listen:
         server_loop()
 
+    elif not listen and len(target) and port > 0:
+        buffer = sys.stdin.read()
+        client_sender(buffer)
+
 
 # Send Client
-
-
 def client_sender(buffer):
     """
     :param buffer: Comandos de entrada por parametros
@@ -117,11 +114,9 @@ def client_sender(buffer):
         # Esperar por alguma entrada
 
         buffer = input("Enter command: ")
-        buffer += "\n"
 
         # Enviar
-        buffer.encode()
-        client_socket.sendall(buffer)
+        client_socket.sendall(buffer.encode())
         client_socket.settimeout(10)
 
 
