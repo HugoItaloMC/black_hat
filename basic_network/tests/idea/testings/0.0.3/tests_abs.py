@@ -1,10 +1,12 @@
+import asyncio
 import subprocess
-from threading import Thread
+from queue import Queue
 from abc import ABCMeta, abstractmethod
 from socket import (socket, AF_UNSPEC,
                     SOCK_STREAM, AI_PASSIVE,
                     SO_REUSEADDR, SOL_SOCKET,
                     getaddrinfo, SocketType)
+import aiofiles
 
 
 class Sender(metaclass=ABCMeta):
@@ -52,12 +54,24 @@ class Sender(metaclass=ABCMeta):
 class Allowers(metaclass=ABCMeta):
 
     def __init__(self):
-        self._process = Thread
+        self._queue = Queue()
 
     def pipeline(self, arg):
         COMMAND = arg.rstrip()
-        proc = subprocess.check_output(COMMAND, stderr=subprocess.PIPE, shell=True)
-        return proc
+        _output = subprocess.check_output(COMMAND, stderr=subprocess.PIPE, shell=True)
+        self.pool_queue(prompt=COMMAND, output=_output)
+
+    def pool_queue(self, **kwargs):
+        self._queue.put(kwargs)
+        self.run_queue()
+
+    def run_queue(self):
+        asyncio.run(self._to_save(self._queue.get()))
+
+    async def _to_save(self, output):
+        async with aiofiles.open("output.jsonl", "a+") as _json:
+            await _json.write('%s\n' % output)
+
 
     @abstractmethod
     def _allowed(self):

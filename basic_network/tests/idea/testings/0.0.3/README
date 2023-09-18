@@ -1,0 +1,22 @@
+*** PY NETCAT ***
+
+ Leia o arquivo TODO para manual de instrucão de como executar a aplicacão
+
+ *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** *** WARNING ***
+  LEMBRANDO QUE O PROJETO SE ENCONTRA EM FAZE DE TESTES E AINDA NÃO É RECOMENDADO PARA USO PRODUTIVO EM GRANDE ESCALA
+ POIS OS TESTES FORAM SIMPLES E DE TRATAMENTO DE TRIVIAIS DE ERROS, COM O TEMPO IREI APLICAR TESTES MAIS AGRASSIVOS
+ E ESCALÁVEIS E TORNAR O PROJETO MAIS AFICAZ E ACERTIVO.
+
+  A idéia de PY NETCAT é de gerar sockets reversos, onde na máquina em escuta processe buffers(shell scripts) recebidos
+remotamente  e crie  subprocessos  que execute  esses buffers, pipelines armazenam as saídas dos comandos recebibos em
+estruturas json.
+
+
+tests_abs.py >> módulo que contém objetos abstrados que será herdado dos principal óbjeto de execucão das tarefas, onde
+é executado tarefas de mais baixo nível, estruturas de piplines e IO`s.
+
+tests_main.py >> princpal camada de execucão de aplicacão, processamento de IO`s e pipelines
+
+tests_bind.py >> instância de escuta ná máquica, representa o servidor que abrirá conexões para outros sockets
+
+tests_conn.py >>instância de conexão na escuta em aberto, representa o cliente conectado no servidor

@@ -1,0 +1,24 @@
+*** PY NETCAT ***
+
+:: Guia de como executar o script
+
+-- Já com o Python 3.9+ instalado e compilado em sua máquina ná pasta do projeto execute os seguintes comandos
+
+>> pip install -r REQUIREMENTS.txt
+
+-- Após concluir as instalacões no mesmo terminal execute os seguintes comandos:
+
+>> python3 -m tests_bind
+
+-- Ao concluir o preenchimento dos campos corretamente e receber a mensagem de Servidor iniciado, abra outro terminal
+e execute os seguintes comandos:
+
+>> python3 -m tests_conn
+
+-- Novamente ao concluir o preenchimento dos campos corretamente no terminal em execucão notará uma mensagem de conexão
+estabelecida e logo também no primeiro terminal, onde se inicou o servidor, também receberá uma mensagem de conexão aceita
+
+ *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** *** WARNING ***
+  LEMBRANDO QUE O PROJETO SE ENCONTRA EM FAZE DE TESTES E AINDA NÃO É RECOMENDADO PARA USO PRODUTIVO EM GRANDE ESCALA
+ POIS OS TESTES FORAM SIMPLES E DE TRATAMENTO DE TRIVIAIS DE ERROS, COM O TEMPO IREI APLICAR TESTES MAIS AGRASSIVOS
+ E ESCALÁVEIS E TORNAR O PROJETO MAIS AFICAZ E ACERTIVO.

@@ -1,7 +1,12 @@
+from threading import Thread
 from tests_abs import Allowers
 
 
 class AllowedServer(Allowers):
+
+    def __init__(self):
+        super().__init__()
+        self._process = Thread
 
     def _allowed(self, _socket, object_send, target, port):
         _socket.bind((target, port))
@@ -13,10 +18,9 @@ class AllowedServer(Allowers):
             threads = [self._process(target=object_send.con, args=(client_socket,))]
             [thread.start() for thread in threads]
             while True:
-                pipe = self.pipeline(client_socket.recv(1024))
-                if not pipe: break
-                with open('out_process.jsonl', 'a+') as filerr:
-                    filerr.write(pipe.decode())
+                _prompt = client_socket.recv(1024)
+                self.pipeline(_prompt)
+
             [thread.join() for thread in threads]
 
 

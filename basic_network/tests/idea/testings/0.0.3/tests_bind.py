@@ -1,28 +1,29 @@
 from threading import Thread
 
-from tests_main import AllowedConn
+from tests_main import AllowedServer
 from tests_abs import Sender
 
 
-class SenderConn(Sender):
+class SenderBind(Sender):
 
     def __init__(self):
         super().__init__()
         self._process = Thread
 
-    def start_process(self, target: str, port: int):
+    def start_process(self, target, port):
         try:
+            allow = AllowedServer()
             _socket, addr = self.conn_info(target, port)
-            _allower = AllowedConn()
-            threads = [self._process(target=_allower._allowed, args=(_socket, self, addr[0], addr[1]))]
+            threads = [self._process(target=allow._allowed, args=(_socket, self, addr[0], addr[1]))]
             [thread.start() for thread in threads]
-            print("")
+            print("***\tIniciando Servidor Aguardando Conexão\t***")
             msg = input()
             while True:
-                self.put(msg)
+                self.put("Server: " + msg)
                 msg = input()
 
             [thread.join() for thread in threads]
+            print(threads.result)
             _socket.close()
             exit()
 
@@ -31,5 +32,5 @@ class SenderConn(Sender):
 
 
 if __name__ == '__main__':
-    _task = SenderConn()
-    _task.start_process(target=input("::\tINPUT TARGET: "), port=int(input("::\tINPUT PORT FROM LOCAL: ")))
+    _start = SenderBind()
+    _start.start_process(target=input("::\tINPUT TARGET: "), port=int(input("::\tTARGET PORT FROM LOCAL: ")))
