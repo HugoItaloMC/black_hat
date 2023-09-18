@@ -8,15 +8,15 @@
 
 -- Após concluir as instalacões no mesmo terminal execute os seguintes comandos:
 
->> python3 -m tests_bind
+>> python3 -m tests_run -listen -t WriteHost -p WritePortFromHost
 
--- Ao concluir o preenchimento dos campos corretamente e receber a mensagem de Servidor iniciado, abra outro terminal
+-- Se a conexão for bem sucedida receberá a mensagem de Servidor iniciado, abra outro terminal
 e execute os seguintes comandos:
 
->> python3 -m tests_conn
+>> python3 -m tests_run -t SameHost -p SamePortFromSameHost
 
--- Novamente ao concluir o preenchimento dos campos corretamente no terminal em execucão notará uma mensagem de conexão
-estabelecida e logo também no primeiro terminal, onde se inicou o servidor, também receberá uma mensagem de conexão aceita
+-- Novamente se a conexão for bem sucedida no terminal em execucão notará uma mensagem de conexão estabelecida e logo
+também no primeiro terminal, onde se inicou o servidor, também receberá uma mensagem de conexão aceita
 
  *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** *** WARNING ***
   LEMBRANDO QUE O PROJETO SE ENCONTRA EM FAZE DE TESTES E AINDA NÃO É RECOMENDADO PARA USO PRODUTIVO EM GRANDE ESCALA

@@ -4,7 +4,7 @@
 
  *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** WARNING *** *** WARNING ***
   LEMBRANDO QUE O PROJETO SE ENCONTRA EM FAZE DE TESTES E AINDA NÃO É RECOMENDADO PARA USO PRODUTIVO EM GRANDE ESCALA
- POIS OS TESTES FORAM SIMPLES E DE TRATAMENTO DE TRIVIAIS DE ERROS, COM O TEMPO IREI APLICAR TESTES MAIS AGRASSIVOS
+ POIS OS TESTES FORAM SIMPLES E DE TRATAMENTOS TRIVIAIS DE ERROS, COM O TEMPO IREI APLICAR TESTES MAIS AGRASSIVOS
  E ESCALÁVEIS E TORNAR O PROJETO MAIS AFICAZ E ACERTIVO.
 
   A idéia de PY NETCAT é de gerar sockets reversos, onde na máquina em escuta processe buffers(shell scripts) recebidos
@@ -12,11 +12,18 @@ remotamente  e crie  subprocessos  que execute  esses buffers, pipelines armazen
 estruturas json.
 
 
-tests_abs.py >> módulo que contém objetos abstrados que será herdado dos principal óbjeto de execucão das tarefas, onde
-é executado tarefas de mais baixo nível, estruturas de piplines e IO`s.
+tests_abs.py >> módulo base que contém principais objetos abstratos que será herdado para óbjetos de execucão das piplines
+e IO`s objetos das conexões bilaterais (escuta, conexão)
 
 tests_main.py >> princpal camada de execucão de aplicacão, processamento de IO`s e pipelines
 
 tests_bind.py >> instância de escuta ná máquica, representa o servidor que abrirá conexões para outros sockets
 
 tests_conn.py >>instância de conexão na escuta em aberto, representa o cliente conectado no servidor
+
+tests_parser.py >> contém analisados dos argumentos passados por linhas de comandos no terminal exemplo :
+`python3 -m SomeFile.py -l --upload="/etc/passwd"` no exemplo anterior `-l` e `--upload="/etc/passwd"` são
+os argumentos a serem análisados por linha de comando
+
+tests_run.py >> módulo que delega qual socket gerar primeiro a partir da análise dos arumentos passados via linha de
+comando
